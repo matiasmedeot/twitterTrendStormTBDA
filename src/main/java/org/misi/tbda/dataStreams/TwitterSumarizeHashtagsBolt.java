@@ -21,7 +21,6 @@ public class TwitterSumarizeHashtagsBolt extends BaseBasicBolt{
 
 	private static final long serialVersionUID = 1L;
 	Map<String, Integer> hashtags = new HashMap<String, Integer>();
-	Jedis jedis;
 	
 	@Override
 	public void cleanup() {
@@ -30,31 +29,23 @@ public class TwitterSumarizeHashtagsBolt extends BaseBasicBolt{
  
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
-		JSONObject json = (JSONObject)input.getValueByField("tweet");
-		if(json.containsKey("entities")){
-			JSONObject entities = (JSONObject) json.get("entities");
-				if(entities.containsKey("hashtags")){
-					for(Object hashObj : (JSONArray)entities.get("hashtags")){
-						JSONObject hashJson = (JSONObject)hashObj;
-						String hash = hashJson.get("text").toString().toLowerCase();
-						Integer frequencyValue = 1;
-						if(!hashtags.containsKey(hash)){
-							hashtags.put(hash, frequencyValue);
-						}else{
-							Integer last = hashtags.get(hash);
-							frequencyValue = last + 1;
-							hashtags.put(hash,frequencyValue);
-						}	
-						collector.emit(new Values(hash,frequencyValue.toString())); 
-					}
-			}
+		String hashtag = (String)input.getValueByField("hashtag");
+		if(!hashtag.isEmpty()) {
+			Integer frequencyValue = 1;
+			if(!hashtags.containsKey(hashtag)){
+				hashtags.put(hashtag, frequencyValue);
+			}else{
+				Integer last = hashtags.get(hashtag);
+				frequencyValue = last + 1;
+				hashtags.put(hashtag,frequencyValue);
+			}	
+			collector.emit(new Values(hashtag,frequencyValue.toString())); 	
 		}
 	}
 
 	@Override
 	public void prepare(Map stormConf, TopologyContext context) {
-		jedis = new Jedis("127.0.0.1",6379);
-
+		
 		TimerTask task = new TimerTask() {
 			
 			@Override
