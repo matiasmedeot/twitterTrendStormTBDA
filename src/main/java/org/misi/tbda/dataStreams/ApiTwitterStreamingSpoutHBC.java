@@ -33,7 +33,7 @@ public class ApiTwitterStreamingSpoutHBC extends BaseRichSpout {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
+	BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100000);
 	BasicClient client;
 	private SpoutOutputCollector collector;
 	private String track;

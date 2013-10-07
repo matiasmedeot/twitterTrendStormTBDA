@@ -16,8 +16,11 @@ public class Topology {
 	public static void main(String[] args) throws InterruptedException {
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("tweets-collector", new ApiTwitterStreamingSpoutHBC(),1);
-		builder.setBolt("hashtag-sumarizer", new TwitterSumarizeHashtags()).
+		builder.setBolt("hashtag-sumarizer", new TwitterSumarizeHashtagsBolt()).
 			shuffleGrouping("tweets-collector"); 
+		builder.setBolt("hashtag-storer", new TwitterStoreHashtagsBolt()).
+		shuffleGrouping("hashtag-sumarizer"); 
+	
 		
 		LocalCluster cluster = new LocalCluster();
 		Config conf = new Config();
