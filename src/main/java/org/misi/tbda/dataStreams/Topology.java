@@ -20,7 +20,9 @@ public class Topology {
 		shuffleGrouping("tweets-collector"); 
 		builder.setBolt("hashtag-sumarizer", new TwitterSumarizeHashtagsBolt()).
 			shuffleGrouping("hashtags-sanitazer"); 
-		builder.setBolt("hashtag-storer", new TwitterStoreHashtagsBolt()).
+		/*builder.setBolt("hashtag-storer", new TwitterStoreHashtagsBolt()).
+		shuffleGrouping("hashtag-sumarizer");*/ 
+		builder.setBolt("hashtag-notifier", new NotifierTwitterHashtagsBolt()).
 		shuffleGrouping("hashtag-sumarizer"); 
 	
 		
