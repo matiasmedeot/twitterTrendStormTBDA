@@ -17,7 +17,7 @@ public class NotifierTwitterHashtagsBolt extends BaseBasicBolt{
 
 	private static final long serialVersionUID = 1L;
 	NotifierWebSocket  notifierWebSocket;
-	String clientname = "tootallnate/websocket";
+	String clientname = "trendTopicNotifier";
 	String protocol = "ws";
 	String host = "localhost";
 	int port = 8080;
@@ -41,9 +41,10 @@ public class NotifierTwitterHashtagsBolt extends BaseBasicBolt{
 
 	@Override
 	public void prepare(Map stormConf, TopologyContext context) {
-		uri = URI.create( serverlocation + "/websockets/chat?userName=" + clientname );
+		uri = URI.create( serverlocation + "/twitterTrendTopicsFrontEnd/dataStream?clientName=" + clientname );
 		notifierWebSocket = new NotifierWebSocket();
 		notifierWebSocket.connect(uri.toString());
+		
 	}
 
 	@Override
